@@ -2296,7 +2296,7 @@ void CBotTF2 :: pointCaptured()
 	taunt();
 }
 
-void CBotTF2 :: spyDisguise (const int iTeam, const byte iClass)
+void CBotTF2 :: spyDisguise (const int iTeam, const int iClass)
 {
 	const string_t mapname = gpGlobals->mapname;
 
@@ -3310,9 +3310,9 @@ void CBotTF2::modThink()
 				// if previously detected or isn't disguised
 				if ((m_fDisguiseTime == 0.0f) || !isDisguised())
 				{
-					const int iteam = CTeamFortress2Mod::getEnemyTeam(getTeam());
+					const int iTeam = CTeamFortress2Mod::getEnemyTeam(getTeam());
 
-					spyDisguise(iteam, getSpyDisguiseClass(iteam));
+					spyDisguise(iTeam, getSpyDisguiseClass(iTeam));
 				}
 
 				m_fSpyDisguiseTime = engine->Time() + 5.0f;

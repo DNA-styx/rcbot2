@@ -562,9 +562,14 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, std::size_t 
 	return true;
 }
 
-bool RCBotPluginMeta::FireGameEvent(IGameEvent * pevent, bool bDontBroadcast)
+bool RCBotPluginMeta::FireGameEvent(IGameEvent* pevent, bool bDontBroadcast)
 {
-	CBotEvents::executeEvent(pevent,TYPE_IGAMEEVENT);
+	// Sanity check: ensure event pointer is valid before processing - [APG]RoboCop[CL]
+	// This handles cases where another plugin (e.g., SourceMod) blocks events with Plugin_Handled
+	if (pevent != nullptr)
+	{
+		CBotEvents::executeEvent(pevent, TYPE_IGAMEEVENT);
+	}
 
 	RETURN_META_VALUE(MRES_IGNORED, true);
 }

@@ -485,7 +485,7 @@ public:
 
 	virtual void engineerBuild ( eEngiBuild iBuilding, eEngiCmd iEngiCmd ) {}
 
-	virtual void spyDisguise (const int iTeam, const byte iClass) {}
+	virtual void spyDisguise (const int iTeam, const int iClass) {}
 
 	virtual bool lookAfterBuildings (float *fTime) { return false; }
 
@@ -883,7 +883,7 @@ public:
 
 	void engineerBuild ( eEngiBuild iBuilding, eEngiCmd iEngiCmd ) override;
 
-	void spyDisguise (int iTeam, byte iClass) override;
+	void spyDisguise (int iTeam, int iClass) override;
 
 	bool hasEngineerBuilt ( eEngiBuild iBuilding ) override;
 
