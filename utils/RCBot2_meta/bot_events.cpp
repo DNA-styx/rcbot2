@@ -1125,14 +1125,16 @@ void CDODRoundOver :: execute ( IBotEventInterface *pEvent )
 	//CDODMod::m_Flags.reset();
 }
 
-void CDODChangeClass :: execute ( IBotEventInterface *pEvent )
+void CDODChangeClass::execute(IBotEventInterface* pEvent)
 {
-	if ( m_pActivator )
-	{
-		if ( CBot *pBot = CBots::getBotPointer(m_pActivator) )
-		{
-			CDODBot *pDODBot = static_cast<CDODBot*>(pBot);
+	if (!pEvent || !m_pActivator)
+		return;
 
+	if (CBot* pBot = CBots::getBotPointer(m_pActivator))
+	{
+		if (pBot->isDOD())
+		{
+			CDODBot* pDODBot = static_cast<CDODBot*>(pBot);
 			pDODBot->selectedClass(pEvent->getInt("class"));
 		}
 	}
