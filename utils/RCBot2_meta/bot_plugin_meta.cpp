@@ -564,8 +564,13 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, std::size_t 
 
 bool RCBotPluginMeta::FireGameEvent(IGameEvent* pevent, bool bDontBroadcast)
 {
+	// Skip processing if another plugin already handled/blocked this event - [APG]RoboCop[CL]
+	if (META_RESULT_STATUS >= MRES_OVERRIDE)
+	{
+		RETURN_META_VALUE(MRES_IGNORED, true);
+	}
+
 	// Sanity check: ensure event pointer is valid before processing - [APG]RoboCop[CL]
-	// This handles cases where another plugin (e.g., SourceMod) blocks events with Plugin_Handled
 	if (pevent != nullptr)
 	{
 		CBotEvents::executeEvent(pevent, TYPE_IGAMEEVENT);

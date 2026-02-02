@@ -765,7 +765,7 @@ public:
 
 	float getFloat(const char* keyName = nullptr, const float defaultValue = 0) override
 	{
-		if (m_pEvent == nullptr)
+		if (!isValid())
 			return defaultValue;
 
 		return m_pEvent->GetFloat(keyName, defaultValue);
@@ -773,7 +773,7 @@ public:
 
 	int getInt(const char* keyName = nullptr, const int defaultValue = 0) override
 	{
-		if (m_pEvent == nullptr)
+		if (!isValid())
 			return defaultValue;
 
 		return m_pEvent->GetInt(keyName, defaultValue);
@@ -781,22 +781,21 @@ public:
 
 	void setInt(const char* keyName, const int value) override
 	{
-		if (m_pEvent != nullptr)
+		if (isValid())
 			m_pEvent->SetInt(keyName, value);
 	}
 
 	const char* getString(const char* keyName = nullptr, const char* defaultValue = nullptr) override
 	{
-		if (m_pEvent == nullptr)
+		if (!isValid())
 			return defaultValue;
 
 		return m_pEvent->GetString(keyName, defaultValue);
 	}
 
-	//Arguments needing filled? [APG]RoboCop[CL]
-	const char *getName () override
+	const char* getName() override
 	{
-		if (m_pEvent == nullptr)
+		if (!isValid())
 			return nullptr;
 
 		return m_pEvent->GetName();
