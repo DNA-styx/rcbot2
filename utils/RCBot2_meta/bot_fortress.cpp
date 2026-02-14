@@ -5965,7 +5965,7 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 		case BOT_UTIL_ENGI_DESTROY_DISP:
 			engineerBuild(ENGI_DISP,ENGI_DESTROY);
 		case BOT_UTIL_BUILDDISP:
-			pWaypoint = nullptr;
+			//pWaypoint = nullptr;
 			if ( m_bDispenserVectorValid )
 			{
 				pWaypoint = CWaypoints::getWaypoint(CWaypointLocations::NearestWaypoint(m_vDispenser,150.0f,-1,true,false,true, nullptr,false,getTeam(),true,false,Vector(0,0,0),CWaypointTypes::W_FL_SENTRY));
@@ -6397,11 +6397,6 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 						Vector vStand;
 						vStand = pStand->getOrigin();
 
-						if (!pWaypoint)
-						{
-							// Handle the null case appropriately [APG]RoboCop[CL]
-							return false;
-						}
 						// Proceed with the current logic [APG]RoboCop[CL]
 						m_pSchedules->add(new CBotTF2DemoPipeTrapSched(iDemoTrapType, vStand, vPoint, Vector(150, 150, 20), false, pWaypoint->getArea()));
 						return true;
@@ -7757,7 +7752,7 @@ bool CBotTF2::isEnemy(edict_t* pEdict, const bool bCheckWeapons)
 			//TODO: Stable tests on TF2 conditions
 			assert(pEdict != nullptr);
 
-			if (!pEdict || pEdict->IsFree() || !CBotGlobals::isPlayer(pEdict))
+			if (pEdict->IsFree())
 				return false;
 
 			const int edictIndex = engine->IndexOfEdict(pEdict);

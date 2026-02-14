@@ -971,8 +971,8 @@ void CFlagEvent :: execute ( IBotEventInterface *pEvent )
 				CClient* pClient = CClients::get(pPlayer);
 
 				assert(pClient != nullptr);
-				if ( pClient && pClient->autoWaypointOn() )
-					pClient->autoEventWaypoint(CWaypointTypes::W_FL_CAPPOINT,200.0f,false);
+				if (pClient->autoWaypointOn())
+					pClient->autoEventWaypoint(CWaypointTypes::W_FL_CAPPOINT, 200.0f, false);
 			}
 
 			CTeamFortress2Mod::resetFlagStateToDefault();

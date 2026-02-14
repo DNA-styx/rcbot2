@@ -2103,7 +2103,7 @@ void CBot :: listenToPlayer ( edict_t *pPlayer, bool bIsEnemy, const bool bIsAtt
 		}
 		else if ( bIsAttacking )
 		{
-			if ( !bIsEnemy && wantToInvestigateSound() ) //TODO: !bIsEnemy always true? [APG]RoboCop[CL]
+			if ( wantToInvestigateSound() )
 			{
 				const QAngle angle = p->GetAbsAngles();
 				Vector forward;

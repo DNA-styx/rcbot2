@@ -2794,7 +2794,7 @@ void CDODBot :: reachedCoverSpot (const int flags)
 
 		assert(pWeapon != nullptr);
 
-		if ( pWeapon && pWeapon->isDeployable() && !pWeapon->outOfAmmo(this) )
+		if ( pWeapon->isDeployable() && !pWeapon->outOfAmmo(this) )
 		{
 			if ( flags & CWaypointTypes::W_FL_MACHINEGUN )
 			{
@@ -3312,8 +3312,8 @@ void CDODBot :: getTasks (unsigned iIgnore)
 		{
 			assert(pBotWeapon != nullptr);
 
-			ADD_UTILITY_WEAPON(BOT_UTIL_THROW_GRENADE, pBotWeapon && (pBotWeapon->getAmmo(this) > 0),
-							   hasSomeConditions(CONDITION_GREN) ? fGrenUtil*2 : fGrenUtil, pBotWeapon)
+			ADD_UTILITY_WEAPON(BOT_UTIL_THROW_GRENADE, pBotWeapon->getAmmo(this) > 0,
+				hasSomeConditions(CONDITION_GREN) ? fGrenUtil*2 : fGrenUtil, pBotWeapon)
 		}
 	}
 
