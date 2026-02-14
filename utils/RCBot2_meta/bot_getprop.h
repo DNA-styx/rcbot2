@@ -292,9 +292,8 @@ public:
 
 		if ( m_data )
 		{
-			static float *x;
-			x = static_cast<float*>(m_data);
-			*v = Vector(*x,*(x+1),*(x+2));
+			float* x = static_cast<float*>(m_data);
+			*v = Vector(*x, *(x + 1), *(x + 2));
 
 			return true;
 		}
