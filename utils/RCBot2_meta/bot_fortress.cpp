@@ -502,21 +502,21 @@ float CBotFortress :: getHealFactor ( edict_t *pPlayer )
 	case TF_CLASS_HWGUY:
 	case TF_CLASS_SOLDIER:
 	case TF_CLASS_PYRO:
+	{
+		bHeavyClass = true; //Unused? [APG]RoboCop[CL]
+			
+		fFactor += 1.0f;
+
+		if ( pMedigun )
 		{
-			bHeavyClass = true; //Unused? [APG]RoboCop[CL]
-
-			fFactor += 1.0f;
-
-			if ( pMedigun )
-			{
-				// overheal HWGUY/SOLDIER/DEMOMAN
-				fFactor += static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100;
-
-				if ( CTeamFortress2Mod::TF2_IsPlayerInvuln(m_pEdict) ) // uber deployed
-					fFactor += (1.0f - (static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100));
-			}
+			// overheal HWGUY/SOLDIER/DEMOMAN
+			fFactor += static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100;
+			
+			if ( CTeamFortress2Mod::TF2_IsPlayerInvuln(m_pEdict) ) // uber deployed
+				fFactor += (1.0f - (static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100));
 		}
-		// drop down
+	}
+	[[fallthrough]];
 	case TF_CLASS_SPY:
 		if (iclass == TF_CLASS_SPY)
 		{
@@ -531,6 +531,7 @@ float CBotFortress :: getHealFactor ( edict_t *pPlayer )
 			if (CTeamFortress2Mod::TF2_IsPlayerCloaked(pPlayer))
 				return 0.0f;
 		}
+		[[fallthrough]];
 	default:
 
 		if ( !bHeavyClass && pMedigun ) // add more factor bassed on uber charge level - bot can gain more uber charge
@@ -1189,7 +1190,8 @@ int CBotFortress :: engiBuildObject (int *iState, const eEngiBuild iObject, floa
 				debugoverlay->AddTextOverlayRGB(building+Vector(0,0,25),0,60.0f,255,255,255,255,"Chosen State: %d",iNextState);
 			}
 #endif
-		}
+	}
+	break;
 	case 2:
 		{
 			// let go
@@ -5858,7 +5860,7 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 			engineerBuild(ENGI_SENTRY,ENGI_DESTROY);
 		case BOT_UTIL_BUILDSENTRY:
 
-			pWaypoint = nullptr;
+			//pWaypoint = nullptr;
 
 			// did someone destroy my sentry at the last sentry point? -- build it again
 			if ( m_bSentryGunVectorValid )
