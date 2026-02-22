@@ -115,12 +115,33 @@ jobs:
     - uses: benjlevesque/short-sha@v2.2
       id: short-sha
 
+    - name: Verify SM Extension Build
+      working-directory: rcbot2/post
+      run: |
+        echo "Checking for compiled SM extensions..."
+        if [ "$(find . -name '*.ext.so' -o -name '*.ext.dll' | wc -l)" -gt 0 ]; then
+          echo "✓ SM Extension binaries found:"
+          find . -name '*.ext.so' -o -name '*.ext.dll'
+        else
+          echo "⚠ Warning: No SM extension binaries found. Check if --sm-path was valid."
+        fi
+      shell: bash
+
     - name: Upload Binary
       uses: actions/upload-artifact@v4
       with:
         name: rcbot2-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
         path: |
             rcbot2/post/package/*
+
+    - name: Upload SM Extension
+      uses: actions/upload-artifact@v4
+      with:
+        name: rcbot2-smext-${{ matrix.os_short }}-${{ steps.short-sha.outputs.sha }}
+        path: |
+            rcbot2/post/package/**/*.ext.so
+            rcbot2/post/package/**/*.ext.dll
+        if-no-files-found: warn
 
     - name: Upload Debug Symbols
       uses: actions/upload-artifact@v4
@@ -172,3 +193,21 @@ jobs:
         with:
           name: rcbot2-dbgsym-windows-${{ steps.short-sha.outputs.sha }}
           path: combined-dbgsym/
+
+      - name: Download Win32 SM Extension
+        uses: actions/download-artifact@v4
+        with:
+          name: rcbot2-smext-win32-${{ steps.short-sha.outputs.sha }}
+          path: combined-smext/win32
+
+      - name: Download Win64 SM Extension
+        uses: actions/download-artifact@v4
+        with:
+          name: rcbot2-smext-win64-${{ steps.short-sha.outputs.sha }}
+          path: combined-smext/win64
+
+      - name: Upload Combined Windows SM Extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: rcbot2-smext-windows-${{ steps.short-sha.outputs.sha }}
+          path: combined-smext/
