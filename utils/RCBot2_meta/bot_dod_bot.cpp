@@ -2794,7 +2794,7 @@ void CDODBot :: reachedCoverSpot (const int flags)
 
 		assert(pWeapon != nullptr);
 
-		if ( pWeapon && pWeapon->isDeployable() && !pWeapon->outOfAmmo(this) )
+		if ( pWeapon->isDeployable() && !pWeapon->outOfAmmo(this) )
 		{
 			if ( flags & CWaypointTypes::W_FL_MACHINEGUN )
 			{
@@ -3186,15 +3186,15 @@ void CDODBot :: getTasks (unsigned iIgnore)
 		fDefendUtil = 0.4f;
 
 		if ( iNumEnemyBombsOnMap > 0 )
-			fDefendUtil = 0.8f - (static_cast<float>(iNumEnemyBombsStillToPlant)/iNumEnemyBombsOnMap)*0.4f;
+			fDefendUtil = 0.8f - (static_cast<float>(iNumEnemyBombsStillToPlant) / static_cast<float>(iNumEnemyBombsOnMap)) * 0.4f;
 
-		if ( CDODMod::isFlagMap() && (iNumBombsToPlant>0) )
-			fPlantUtil = 0.3f + (((static_cast<float>(iFlagsOwned)/iNumBombsToPlant)*0.6f)/iNumFlags);
+		if (CDODMod::isFlagMap() && (iNumBombsToPlant > 0))
+			fPlantUtil = 0.3f + (((static_cast<float>(iFlagsOwned) / static_cast<float>(iNumBombsToPlant)) * 0.6f) / static_cast<float>(iNumFlags));
 		else
-			fPlantUtil = 0.4f + ((static_cast<float>(iNumBombsToPlant)/iNumBombsOnMap)*0.4f);
-		
+			fPlantUtil = 0.4f + ((static_cast<float>(iNumBombsToPlant) / static_cast<float>(iNumBombsOnMap)) * 0.4f);
+
 		fDefuseBombUtil = fDefendUtil * 2;
-		fDefendBombUtil = 0.8f - ((static_cast<float>(iNumBombsToDefend)/iNumBombsOnMap)*0.8f);
+		fDefendBombUtil = 0.8f - ((static_cast<float>(iNumBombsToDefend) / static_cast<float>(iNumBombsOnMap)) * 0.8f);
 
 		
 		fPlantUtil += randomFloat(-0.25f,0.25f); // add some fuzz
@@ -3312,8 +3312,8 @@ void CDODBot :: getTasks (unsigned iIgnore)
 		{
 			assert(pBotWeapon != nullptr);
 
-			ADD_UTILITY_WEAPON(BOT_UTIL_THROW_GRENADE, pBotWeapon && (pBotWeapon->getAmmo(this) > 0),
-							   hasSomeConditions(CONDITION_GREN) ? fGrenUtil*2 : fGrenUtil, pBotWeapon)
+			ADD_UTILITY_WEAPON(BOT_UTIL_THROW_GRENADE, pBotWeapon->getAmmo(this) > 0,
+				hasSomeConditions(CONDITION_GREN) ? fGrenUtil*2 : fGrenUtil, pBotWeapon)
 		}
 	}
 

@@ -502,21 +502,21 @@ float CBotFortress :: getHealFactor ( edict_t *pPlayer )
 	case TF_CLASS_HWGUY:
 	case TF_CLASS_SOLDIER:
 	case TF_CLASS_PYRO:
+	{
+		bHeavyClass = true; //Unused? [APG]RoboCop[CL]
+			
+		fFactor += 1.0f;
+
+		if ( pMedigun )
 		{
-			bHeavyClass = true; //Unused? [APG]RoboCop[CL]
-
-			fFactor += 1.0f;
-
-			if ( pMedigun )
-			{
-				// overheal HWGUY/SOLDIER/DEMOMAN
-				fFactor += static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100;
-
-				if ( CTeamFortress2Mod::TF2_IsPlayerInvuln(m_pEdict) ) // uber deployed
-					fFactor += (1.0f - (static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100));
-			}
+			// overheal HWGUY/SOLDIER/DEMOMAN
+			fFactor += static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100;
+			
+			if ( CTeamFortress2Mod::TF2_IsPlayerInvuln(m_pEdict) ) // uber deployed
+				fFactor += (1.0f - (static_cast<float>(CClassInterface::getUberChargeLevel(pMedigun))/100));
 		}
-		// drop down
+	}
+	[[fallthrough]];
 	case TF_CLASS_SPY:
 		if (iclass == TF_CLASS_SPY)
 		{
@@ -531,6 +531,7 @@ float CBotFortress :: getHealFactor ( edict_t *pPlayer )
 			if (CTeamFortress2Mod::TF2_IsPlayerCloaked(pPlayer))
 				return 0.0f;
 		}
+		[[fallthrough]];
 	default:
 
 		if ( !bHeavyClass && pMedigun ) // add more factor bassed on uber charge level - bot can gain more uber charge
@@ -1189,7 +1190,8 @@ int CBotFortress :: engiBuildObject (int *iState, const eEngiBuild iObject, floa
 				debugoverlay->AddTextOverlayRGB(building+Vector(0,0,25),0,60.0f,255,255,255,255,"Chosen State: %d",iNextState);
 			}
 #endif
-		}
+	}
+	break;
 	case 2:
 		{
 			// let go
@@ -2296,7 +2298,7 @@ void CBotTF2 :: pointCaptured()
 	taunt();
 }
 
-void CBotTF2 :: spyDisguise (const int iTeam, const byte iClass)
+void CBotTF2 :: spyDisguise (const int iTeam, const int iClass)
 {
 	const string_t mapname = gpGlobals->mapname;
 
@@ -3310,9 +3312,9 @@ void CBotTF2::modThink()
 				// if previously detected or isn't disguised
 				if ((m_fDisguiseTime == 0.0f) || !isDisguised())
 				{
-					const int iteam = CTeamFortress2Mod::getEnemyTeam(getTeam());
+					const int iTeam = CTeamFortress2Mod::getEnemyTeam(getTeam());
 
-					spyDisguise(iteam, getSpyDisguiseClass(iteam));
+					spyDisguise(iTeam, getSpyDisguiseClass(iTeam));
 				}
 
 				m_fSpyDisguiseTime = engine->Time() + 5.0f;
@@ -5858,7 +5860,7 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 			engineerBuild(ENGI_SENTRY,ENGI_DESTROY);
 		case BOT_UTIL_BUILDSENTRY:
 
-			pWaypoint = nullptr;
+			//pWaypoint = nullptr;
 
 			// did someone destroy my sentry at the last sentry point? -- build it again
 			if ( m_bSentryGunVectorValid )
@@ -5963,7 +5965,7 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 		case BOT_UTIL_ENGI_DESTROY_DISP:
 			engineerBuild(ENGI_DISP,ENGI_DESTROY);
 		case BOT_UTIL_BUILDDISP:
-			pWaypoint = nullptr;
+			//pWaypoint = nullptr;
 			if ( m_bDispenserVectorValid )
 			{
 				pWaypoint = CWaypoints::getWaypoint(CWaypointLocations::NearestWaypoint(m_vDispenser,150.0f,-1,true,false,true, nullptr,false,getTeam(),true,false,Vector(0,0,0),CWaypointTypes::W_FL_SENTRY));
@@ -6395,11 +6397,6 @@ bool CBotTF2 :: executeAction ( CBotUtility *util )//eBotAction id, CWaypoint *p
 						Vector vStand;
 						vStand = pStand->getOrigin();
 
-						if (!pWaypoint)
-						{
-							// Handle the null case appropriately [APG]RoboCop[CL]
-							return false;
-						}
 						// Proceed with the current logic [APG]RoboCop[CL]
 						m_pSchedules->add(new CBotTF2DemoPipeTrapSched(iDemoTrapType, vStand, vPoint, Vector(150, 150, 20), false, pWaypoint->getArea()));
 						return true;
@@ -7755,7 +7752,7 @@ bool CBotTF2::isEnemy(edict_t* pEdict, const bool bCheckWeapons)
 			//TODO: Stable tests on TF2 conditions
 			assert(pEdict != nullptr);
 
-			if (!pEdict || pEdict->IsFree() || !CBotGlobals::isPlayer(pEdict))
+			if (pEdict->IsFree())
 				return false;
 
 			const int edictIndex = engine->IndexOfEdict(pEdict);

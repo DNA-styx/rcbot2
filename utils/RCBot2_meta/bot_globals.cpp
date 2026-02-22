@@ -479,7 +479,7 @@ bool CBotGlobals :: isVisible (const Vector& vSrc, const Vector& vDest)
 void CBotGlobals :: traceLine (const Vector& vSrc, const Vector& vDest, const unsigned mask, ITraceFilter *pFilter)
 {
 	Ray_t ray;
-	std::memset(&m_TraceResult,0,sizeof(trace_t));
+	m_TraceResult = trace_t{};
 	ray.Init( vSrc, vDest );
 	enginetrace->TraceRay( ray, mask, pFilter, &m_TraceResult );
 }
@@ -489,7 +489,7 @@ float CBotGlobals :: quickTraceline (edict_t *pIgnore, const Vector& vSrc, const
 	CTraceFilterVis filter = CTraceFilterVis(pIgnore);
 
 	Ray_t ray;
-	std::memset(&m_TraceResult,0,sizeof(trace_t));
+	m_TraceResult = trace_t{};
 	ray.Init( vSrc, vDest );
 	enginetrace->TraceRay( ray, MASK_NPCSOLID_BRUSHONLY, &filter, &m_TraceResult );
 	return m_TraceResult.fraction;

@@ -65,13 +65,11 @@ public:
 
 	static QAngle playerAngles ( edict_t *pPlayer );
 
-	static bool isPlayer (const edict_t* pEdict)
+	static bool isPlayer(const edict_t* pEdict)
 	{
-		static int index;
+		const int index = ENTINDEX(pEdict);
 
-		index = ENTINDEX(pEdict);
-
-		return index>0&&index<=gpGlobals->maxClients;
+		return index > 0 && index <= gpGlobals->maxClients;
 	}
 
 	static bool walkableFromTo (edict_t *pPlayer, const Vector& v_src, const Vector& v_dest);

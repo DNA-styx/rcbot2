@@ -621,14 +621,8 @@ int *CBotEntProp::GetEntPropPointer(const int entity, const PropType proptype, c
 	{
 		uint8_t* base = reinterpret_cast<uint8_t*>(pEntity) + static_cast<std::size_t>(offset);
 
-		if (is_unsigned)
-		{
-			assert(reinterpret_cast<std::uintptr_t>(base) % alignof(uint16_t) == 0 && "Pointer is not properly aligned for uint16_t");
-			return reinterpret_cast<int*>(reinterpret_cast<uint16_t*>(base));
-		}
-
-		assert(reinterpret_cast<std::uintptr_t>(base) % alignof(int16_t) == 0 && "Pointer is not properly aligned for int16_t");
-		return reinterpret_cast<int*>(reinterpret_cast<int16_t*>(base));
+		assert(reinterpret_cast<std::uintptr_t>(base) % alignof(int16_t) == 0 && "Pointer is not properly aligned for 16-bit access");
+		return reinterpret_cast<int*>(base);
 	}
 
 	if (bit_count >= 2)
